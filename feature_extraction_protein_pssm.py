@@ -34,6 +34,36 @@ def PSSM(pssm_file):
        
     return pssm_array
 
+"----------PSSM encoding loader with None aa------------------"
+"""
+"This pssm loader can translate the short protein or aa sequences 
+ into a specific length: length
+ by cover the unknown 
+"""
+#input: pssm_file
+#       sequence with '_' for the unknown aa 
+def PSSM_aa(pssm_file,sequence):
+    pssm=[]
+    #for line in pssm_file:
+    length = len(pssm_file)   
+    for i in range(length):
+        if sequence[i] != '_':
+            line1=re.findall(r"[\-|0-9]+",pssm_file[i])
+            del line1[41:]
+            pssm.append(line1)
+        else:
+            pssm.append([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+    del pssm[0:3]
+    del pssm[-6:]
+    
+    pssm_array_origin = np.array(pssm,dtype=np.float32)
+    #The PSSM matrix is obtained
+    pssm_array=pssm_array_origin[:,1:21] 
+    
+       
+    return pssm_array
+
+
 "-------------------------PKA encoding------------------------"
 #input: PSSM.path
 #output: a numpyarray 20x(4+1)x20D 
@@ -175,3 +205,4 @@ def k_separated_bigrams_pssm(input_matrix): #A function to get KSB
     seq_cn = float(np.shape(input_matrix)[0])
     k_separated_bigrams_pssm_vector=average(matrix_final,10000.0)
     return k_separated_bigrams_pssm_vector[0]
+
